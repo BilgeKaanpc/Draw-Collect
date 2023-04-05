@@ -10,36 +10,51 @@ public class throwBall : MonoBehaviour
     [SerializeField] private GameObject[] basketPoints;
     int activeBallIndex;
     int RandomBasketPointIndex;
-    void Start()
-    {
-        
-    }
+    bool Lock;
 
-    void Update()
+    IEnumerator BallThrowSystem()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        while (true)
         {
-            Balls[activeBallIndex].transform.position = ballBase.transform.position;
-            Balls[activeBallIndex].SetActive(true);
-            float angle = Random.Range(70f,110f);
-            Vector3 position = Quaternion.AngleAxis(angle,Vector3.forward) * Vector3.right;
-            Balls[activeBallIndex].gameObject.GetComponent<Rigidbody2D>().AddForce(position * 750);
-            if(activeBallIndex != Balls.Length - 1)
+            if (!Lock)
             {
-                activeBallIndex++;
+                yield return new WaitForSeconds(.5f);
+                Balls[activeBallIndex].transform.position = ballBase.transform.position;
+                Balls[activeBallIndex].SetActive(true);
+                float angle = Random.Range(70f, 110f);
+                Vector3 position = Quaternion.AngleAxis(angle, Vector3.forward) * Vector3.right;
+                Balls[activeBallIndex].gameObject.GetComponent<Rigidbody2D>().AddForce(position * 750);
+                if (activeBallIndex != Balls.Length - 1)
+                {
+                    activeBallIndex++;
+                }
+                else
+                {
+                    activeBallIndex = 0;
+                }
+
+                yield return new WaitForSeconds(.7f);
+
+                RandomBasketPointIndex = Random.Range(0, basketPoints.Length - 1);
+                Basket.transform.position = basketPoints[RandomBasketPointIndex].transform.position;
+                Basket.SetActive(true);
+                Lock = true;
             }
             else
             {
-                activeBallIndex = 0;
+                yield return null;
             }
-            Invoke("createBasket",.5f);
         }
     }
-
-    void createBasket()
+    void Start()
     {
-        RandomBasketPointIndex = Random.Range(0, basketPoints.Length - 1);
-        Basket.transform.position = basketPoints[RandomBasketPointIndex].transform.position;
-        Basket.SetActive(true);
+        StartCoroutine(BallThrowSystem());
     }
+
+    public void Continue()
+    {
+        Lock = false;
+        Basket.SetActive(false);
+    }
+  
 }

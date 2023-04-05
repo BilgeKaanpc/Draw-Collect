@@ -11,6 +11,7 @@ public class drawLine : MonoBehaviour
     public EdgeCollider2D edgeCollider;
     public List<Vector2> touchPositionList;
 
+    public List<GameObject> Lines;
     void Update()
     {
         if (Input.GetMouseButtonDown(0))
@@ -31,6 +32,7 @@ public class drawLine : MonoBehaviour
     void createLine()
     {
         Line = Instantiate(LinePrefab,Vector2.zero,Quaternion.identity);
+        Lines.Add(Line);
         lineRenderer = Line.GetComponent<LineRenderer>();
         edgeCollider = Line.GetComponent<EdgeCollider2D>();
         touchPositionList.Clear();
@@ -48,4 +50,15 @@ public class drawLine : MonoBehaviour
         lineRenderer.SetPosition(lineRenderer.positionCount-1,touchPosition);
         edgeCollider.points = touchPositionList.ToArray();
     }
+
+
+    public void Continue()
+    {
+        foreach (var item in Lines)
+        {
+            Destroy(item.gameObject);
+        }
+        Lines.Clear();
+    }
+
 }
