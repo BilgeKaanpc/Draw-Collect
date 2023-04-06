@@ -12,21 +12,30 @@ public class drawLine : MonoBehaviour
     public List<Vector2> touchPositionList;
 
     public List<GameObject> Lines;
+    bool canDraw;
+    private void Start()
+    {
+        canDraw = false;
+    }
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
-        {
-            createLine();
+        if(canDraw) {
 
-        }
-        if (Input.GetMouseButton(0))
-        {
-            Vector2 touchPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            if (Vector2.Distance(touchPosition,touchPositionList[^1]) > .1f)
+            if (Input.GetMouseButtonDown(0))
             {
-                UpdateLine(touchPosition);
+                createLine();
+
+            }
+            if (Input.GetMouseButton(0))
+            {
+                Vector2 touchPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                if (Vector2.Distance(touchPosition, touchPositionList[^1]) > .1f)
+                {
+                    UpdateLine(touchPosition);
+                }
             }
         }
+
     }
 
     void createLine()
@@ -61,4 +70,12 @@ public class drawLine : MonoBehaviour
         Lines.Clear();
     }
 
+    public void stopDrawing()
+    {
+        canDraw = false;
+    }
+    public void startDrawing()
+    {
+        canDraw = true;
+    }
 }

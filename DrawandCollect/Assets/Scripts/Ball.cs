@@ -10,7 +10,7 @@ public class Ball : MonoBehaviour
         if (collision.gameObject.CompareTag("basket"))
         {
             gameObject.SetActive(false);
-            _GameManager.Continue();
+            _GameManager.Continue(transform.position);
         }
         else if (collision.gameObject.CompareTag("gameOver")) 
         {

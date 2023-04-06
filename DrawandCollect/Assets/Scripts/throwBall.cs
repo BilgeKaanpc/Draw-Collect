@@ -48,6 +48,14 @@ public class throwBall : MonoBehaviour
     }
     void Start()
     {
+        
+    }
+    public void stopThrowing()
+    {
+        StopAllCoroutines();
+    }
+    public void playGame()
+    {
         StartCoroutine(BallThrowSystem());
     }
 
