@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class drawLine : MonoBehaviour
 {
@@ -10,16 +11,20 @@ public class drawLine : MonoBehaviour
     public LineRenderer lineRenderer;
     public EdgeCollider2D edgeCollider;
     public List<Vector2> touchPositionList;
+    public TMP_Text drawCountText;
 
     public List<GameObject> Lines;
     bool canDraw;
+    int DrawRule;
     private void Start()
     {
+        DrawRule = 3;
         canDraw = false;
+        drawCountText.text = DrawRule.ToString();
     }
     void Update()
     {
-        if(canDraw) {
+        if(canDraw && DrawRule !=0) {
 
             if (Input.GetMouseButtonDown(0))
             {
@@ -33,6 +38,14 @@ public class drawLine : MonoBehaviour
                 {
                     UpdateLine(touchPosition);
                 }
+            }
+        }
+        if(Lines.Count != 0 && DrawRule != 0)
+        {
+            if (Input.GetMouseButtonUp(0))
+            {
+                DrawRule--;
+                drawCountText.text = DrawRule.ToString();
             }
         }
 
@@ -68,6 +81,8 @@ public class drawLine : MonoBehaviour
             Destroy(item.gameObject);
         }
         Lines.Clear();
+        DrawRule = 3;
+        drawCountText.text = DrawRule.ToString();
     }
 
     public void stopDrawing()
@@ -76,6 +91,7 @@ public class drawLine : MonoBehaviour
     }
     public void startDrawing()
     {
+        DrawRule = 3;
         canDraw = true;
     }
 }

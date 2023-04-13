@@ -39,6 +39,7 @@ public class throwBall : MonoBehaviour
                 Basket.transform.position = basketPoints[RandomBasketPointIndex].transform.position;
                 Basket.SetActive(true);
                 Lock = true;
+                Invoke("CheckBall", 3);
             }
             else
             {
@@ -63,6 +64,14 @@ public class throwBall : MonoBehaviour
     {
         Lock = false;
         Basket.SetActive(false);
+        CancelInvoke();
     }
   
+    void CheckBall()
+    {
+        if (Lock)
+        {
+            GetComponent<GameManager>().GameOver();
+        }
+    }
 }

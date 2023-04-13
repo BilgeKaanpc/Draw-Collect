@@ -11,7 +11,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] AudioSource basketSound, gameOverSound;
     [SerializeField] TMP_Text bestScoreText ,endBestText,scoreText;
     [SerializeField] ParticleSystem basketEffect, bestEffect;
-    [SerializeField] GameObject playPanel, gameOverPanel;
+    [SerializeField] GameObject playPanel, gameOverPanel, gamePanel;
 
     int score;
     void Start()
@@ -42,6 +42,7 @@ public class GameManager : MonoBehaviour
         _ThrowBall.playGame();
         _DrawLine.startDrawing();
         playPanel.SetActive(false);
+        gamePanel.SetActive(true);
     }
     public void TryAgain()
     {
@@ -49,6 +50,7 @@ public class GameManager : MonoBehaviour
     }
     public void GameOver()
     {
+        gamePanel.SetActive(false);
         gameOverSound.Play();
         gameOverPanel.SetActive(true);
         scoreText.text = score.ToString();
