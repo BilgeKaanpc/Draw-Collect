@@ -13,9 +13,10 @@ public class GameManager : MonoBehaviour
     [SerializeField] ParticleSystem basketEffect, bestEffect;
     [SerializeField] GameObject playPanel, gameOverPanel, gamePanel;
 
-    int score;
+     int score;
     void Start()
     {
+        score = 0;
         if (PlayerPrefs.HasKey("BestScore"))
         {
             bestScoreText.text = PlayerPrefs.GetInt("BestScore").ToString();
@@ -50,18 +51,21 @@ public class GameManager : MonoBehaviour
     }
     public void GameOver()
     {
-        gamePanel.SetActive(false);
-        gameOverSound.Play();
-        gameOverPanel.SetActive(true);
-        scoreText.text = score.ToString();
-        if (score > PlayerPrefs.GetInt("BestScore"))
+        if (!gameOverPanel.activeInHierarchy)
         {
-            PlayerPrefs.SetInt("BestScore", score);
-            bestEffect.gameObject.SetActive(true);
-            endBestText.text = PlayerPrefs.GetInt("BestScore").ToString();
-            bestEffect.Play();
+            gamePanel.SetActive(false);
+            gameOverSound.Play();
+            gameOverPanel.SetActive(true);
+            scoreText.text = score.ToString();
+            if (score > PlayerPrefs.GetInt("BestScore"))
+            {
+                PlayerPrefs.SetInt("BestScore", score);
+                bestEffect.gameObject.SetActive(true);
+                endBestText.text = PlayerPrefs.GetInt("BestScore").ToString();
+                bestEffect.Play();
+            }
+            _ThrowBall.stopThrowing();
+            _DrawLine.stopDrawing();
         }
-        _ThrowBall.stopThrowing();
-        _DrawLine.stopDrawing();
     }
 }

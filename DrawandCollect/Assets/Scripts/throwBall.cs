@@ -12,6 +12,8 @@ public class throwBall : MonoBehaviour
     int RandomBasketPointIndex;
     bool Lock;
 
+    public static int ballCount;
+    public static int ballThrowCount;
     IEnumerator BallThrowSystem()
     {
         while (true)
@@ -19,18 +21,20 @@ public class throwBall : MonoBehaviour
             if (!Lock)
             {
                 yield return new WaitForSeconds(.5f);
-                Balls[activeBallIndex].transform.position = ballBase.transform.position;
-                Balls[activeBallIndex].SetActive(true);
-                float angle = Random.Range(70f, 110f);
-                Vector3 position = Quaternion.AngleAxis(angle, Vector3.forward) * Vector3.right;
-                Balls[activeBallIndex].gameObject.GetComponent<Rigidbody2D>().AddForce(position * 750);
-                if (activeBallIndex != Balls.Length - 1)
+                if(ballThrowCount % 5 == 0 && ballThrowCount != 0)
                 {
-                    activeBallIndex++;
+                    for(int i = 0; i < 2; i++)
+                    {
+                        ThrowBallandFix();
+                    }
+                    ballCount = 2;
+                    ballThrowCount++;
                 }
                 else
                 {
-                    activeBallIndex = 0;
+                    ThrowBallandFix();
+                    ballThrowCount++;
+                    ballCount = 1;
                 }
 
                 yield return new WaitForSeconds(.7f);
@@ -39,7 +43,7 @@ public class throwBall : MonoBehaviour
                 Basket.transform.position = basketPoints[RandomBasketPointIndex].transform.position;
                 Basket.SetActive(true);
                 Lock = true;
-                Invoke("CheckBall", 3);
+                Invoke("CheckBall", 5);
             }
             else
             {
@@ -49,7 +53,8 @@ public class throwBall : MonoBehaviour
     }
     void Start()
     {
-        
+        ballThrowCount = 0;
+        ballCount = 0;
     }
     public void stopThrowing()
     {
@@ -62,16 +67,46 @@ public class throwBall : MonoBehaviour
 
     public void Continue()
     {
-        Lock = false;
-        Basket.SetActive(false);
-        CancelInvoke();
+        if(ballCount == 1)
+        {
+            Lock = false;
+            Basket.SetActive(false);
+            CancelInvoke();
+            ballCount--;
+        }
+        else
+        {
+            ballCount--;
+        }
     }
-  
+    float giveAngle(float min, float max)
+    {
+        return Random.Range(min,max);
+    }
+    Vector3 givePosition(float angle)
+    {
+       return Quaternion.AngleAxis(angle, Vector3.forward) * Vector3.right;
+    }
     void CheckBall()
     {
         if (Lock)
         {
             GetComponent<GameManager>().GameOver();
+        }
+    }
+
+    void ThrowBallandFix()
+    {
+        Balls[activeBallIndex].transform.position = ballBase.transform.position;
+        Balls[activeBallIndex].SetActive(true);
+        Balls[activeBallIndex].gameObject.GetComponent<Rigidbody2D>().AddForce(givePosition(giveAngle(70f, 110f)) * 750);
+        if (activeBallIndex != Balls.Length - 1)
+        {
+            activeBallIndex++;
+        }
+        else
+        {
+            activeBallIndex = 0;
         }
     }
 }
